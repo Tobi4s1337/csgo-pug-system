@@ -1,0 +1,22 @@
+const passport = require('passport');
+const passportJwt = require('passport-jwt');
+const User = require('../models/user.js');
+require('dotenv').config();
+
+const jwtOptions = {
+	// Get the JWT from the "Authorization" header.
+	// By default this looks for a "JWT " prefix
+	jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeader(),
+	// The secret that was used to sign the JWT
+	secretOrKey: process.env.JWT_SECRET
+};
+
+passport.use(
+	new passportJwt.Strategy(jwtOptions, (payload, done) => {
+		const user = User.findById(parseInt(payload.sub));
+		if (user) {
+			return done(null, user, payload);
+		}
+		return done();
+	})
+);

@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const authRoutes = require('./routes/auth');
+const passportSetup = require('./passport/passportSetup');
 require('dotenv').config();
 
 mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/pug', {
@@ -12,22 +14,16 @@ mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/pug', {
 const app = express();
 
 app.use(require('morgan')('combined'));
-app.use(require('cookie-parser')());
 app.use(
 	require('body-parser').urlencoded({
 		extended: true
 	})
 );
-app.use(
-	require('express-session')({
-		secret: process.env.SESSION_SECRET,
-		resave: true,
-		saveUninitialized: true
-	})
-);
 app.use(passport.initialize());
-app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, 'client')));
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+app.use('/auth', authRoutes);
 
 app.listen(process.env.PORT || 3000);
