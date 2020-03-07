@@ -5,10 +5,13 @@
   </head>
   <body>
     Authenticated successfully.
-
+    <%= token %>
+    <%= applicationUrl %>
     <script type="text/javascript">
-      window.opener.authenticateCallback('<%= token %>');
-      window.close();
+    window.onload = function (){
+      window.opener.postMessage('<%= token %>', '<%= applicationUrl %>');
+    }
+   window.close();
     </script>
   </body>
 </html>

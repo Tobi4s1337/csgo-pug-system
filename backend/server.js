@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const authRoutes = require('./routes/auth');
+const cors = require('cors');
 const passportSetup = require('./passport/passportSetup');
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/pug', {
 
 const app = express();
 
+app.use(cors());
 app.use(require('morgan')('combined'));
 app.use(
 	require('body-parser').urlencoded({

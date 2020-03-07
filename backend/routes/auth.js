@@ -9,19 +9,29 @@ router.get('/steam', passport.authenticate('steam', { failureRedirect: '/' }), f
 
 router.get(
 	'/steam/return',
-	// Issue #37 - Workaround for Express router module stripping the full url, causing assertion to fail
-
 	passport.authenticate('steam', { session: false, failureRedirect: '/' }),
 	generateUserToken
 );
 
+router.get(
+	'/secure',
+	// This request must be authenticated using a JWT, or else we will fail
+	passport.authenticate([ 'jwt' ], { session: false }),
+	(req, res) => {
+		console.log('User is authenticated');
+		console.log(req);
+		res.send('Secure response from ' + JSON.stringify(req.user));
+	}
+);
+
 module.exports = router;
 
-function generateUserToken(req, res) {
+function generateUserToken(req, res, test) {
 	const accessToken = generateAccessToken(req.user.id);
 	console.log('Generated token');
 	res.render('authenticated', {
-		token: accessToken
+		token: accessToken,
+		applicationUrl: process.env.APPLICATION_URL || 'http://localhost:8080/'
 	});
 }
 
@@ -30,10 +40,6 @@ function generateAccessToken(userId) {
 	const expiresIn = '1 hour';
 	const secret = process.env.JWT_SECRET;
 
-	const token = jwt.sign({}, secret, {
-		expiresIn: expiresIn,
-		subject: userId.toString()
-	});
-
+	const token = jwt.sign({ id: userId.toString() }, secret, { expiresIn: expiresIn });
 	return token;
 }

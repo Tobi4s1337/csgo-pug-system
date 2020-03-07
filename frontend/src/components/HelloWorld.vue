@@ -87,12 +87,18 @@
         <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a>
       </li>
     </ul>
+    {{info}}
   </div>
 </template>
 
 <script>
 export default {
   name: "HelloWorld",
+  data() {
+    return {
+      info: null
+    };
+  },
   props: {
     msg: String
   }

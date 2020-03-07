@@ -1,6 +1,7 @@
 const passport = require('passport');
 const SteamStrategy = require('passport-steam').Strategy;
 const User = require('../models/user.js');
+require('./jwt');
 require('dotenv').config();
 
 passport.serializeUser((user, done) => {
@@ -16,8 +17,8 @@ passport.deserializeUser((id, done) => {
 passport.use(
 	new SteamStrategy(
 		{
-			returnURL: process.env.APPLICATION_URL + '/auth/steam/return',
-			realm: process.env.APPLICATION_URL,
+			returnURL: process.env.API_BASE_URL + '/auth/steam/return',
+			realm: process.env.API_BASE_URL,
 			apiKey: process.env.STEAM_API_KEY
 		},
 		function(identifier, profile, done) {

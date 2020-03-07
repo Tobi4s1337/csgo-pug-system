@@ -6,7 +6,7 @@ require('dotenv').config();
 const jwtOptions = {
 	// Get the JWT from the "Authorization" header.
 	// By default this looks for a "JWT " prefix
-	jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeader(),
+	jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeaderWithScheme('jwt'),
 	// The secret that was used to sign the JWT
 	secretOrKey: process.env.JWT_SECRET
 };
