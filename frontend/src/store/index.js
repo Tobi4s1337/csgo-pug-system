@@ -6,13 +6,14 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		idToken: null,
+		idToken: getSavedState('auth.idToken'),
 		userId: null
 	},
 	mutations: {
 		authUser(state, userData) {
 			state.idToken = userData;
 			axios.defaults.headers.common['Authorization'] = 'jwt ' + userData;
+			saveState('auth.idToken', userData);
 		}
 	},
 	actions: {
@@ -22,3 +23,11 @@ export default new Vuex.Store({
 	},
 	modules: {}
 });
+
+function getSavedState(key) {
+	return JSON.parse(window.localStorage.getItem(key));
+}
+
+function saveState(key, JWT) {
+	window.localStorage.setItem(key, JSON.stringify(JWT));
+}
