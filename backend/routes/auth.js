@@ -18,8 +18,7 @@ router.get(
 	// This request must be authenticated using a JWT, or else we will fail
 	passport.authenticate([ 'jwt' ], { session: false }),
 	(req, res) => {
-		console.log('User is authenticated');
-		console.log(req);
+		console.log('User is authenticated: ' + req.user);
 		res.send('Secure response from ' + JSON.stringify(req.user));
 	}
 );

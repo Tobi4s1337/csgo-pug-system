@@ -13,10 +13,12 @@ const jwtOptions = {
 
 passport.use(
 	new passportJwt.Strategy(jwtOptions, (payload, done) => {
-		const user = User.findById(parseInt(payload.sub));
-		if (user) {
-			return done(null, user, payload);
-		}
-		return done();
+		console.log(payload.id);
+		User.findById(payload.id, (err, user) => {
+			if (user) {
+				return done(null, user, payload);
+			}
+			return done();
+		});
 	})
 );
